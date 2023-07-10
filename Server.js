@@ -90,8 +90,34 @@ app.post('/api/menu', upload.single('image'), async (req, res) => {
   }
 });
 
+//Menghapus Menu
+app.delete('/api/menu/:id', (req, res) => {
+  const { id } = req.params;
+  const index = menuData.findIndex((menu) => menu.id === parseInt(id));
+  if (index !== -1) {
+    menuData.splice(index, 1);
+    res.sendStatus(204);
+  } else {
+    res.sendStatus(404);
+  }
+});
+
+//Mengambil data menu berdasarkan ID
+app.get('/api/menu/:id', async (req, res) => {
+  try {
+    const menu = await Menu.findById(req.params.id);
+    if (!menu) {
+      return res.status(404).json({ error: 'Menu tidak ditemukan' });
+    }
+    res.json(menu);
+  } catch (error) {
+    res.status(500).json({ error: 'Terjadi kesalahan saat mengambil data menu' });
+  }
+});
+
+
 //Menampilkan Menu
-app.get('/api/menu', async (req, res) => {
+app.get('/api/menu', async (_req, res) => {
   try {
     const menus = await Menu.find({});
     const formattedMenus = menus.map((menu) => ({

@@ -1,104 +1,194 @@
-import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Image, TextInput, SafeAreaView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, FlatList, Text, Image, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
+import { Alert } from 'react-native';
 
-export default function BerandaPengguna({ navigation }) {
+const BerandaAdmin = ({ navigation }) => {
+  const [menuData, setMenuData] = useState([]);
+  const [selectedMenuId, setSelectedMenuId] = useState(null);
+  const [isMenuOptionsVisible, setMenuOptionsVisible] = useState(false);
   const statusBarHeight = Constants.statusBarHeight;
-  return (
-    <SafeAreaView style={styles.container}>
+  const [displayedMenu, setDisplayedMenu] = useState([]);
 
-      <View style={styles.buttonContainer1}>
-        <TextInput
-          style={styles.input}
-          placeholder="Cari"
-        />
-      </View>
-      <View style={styles.buttonContainer2}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('InputMenu')}
-        >
-          <View style={styles.buttonContent}>
-            <Ionicons name="cart-outline" size={24} color="white" />
-            <Text style={styles.buttonText}>input Menu</Text>
-          </View>
+
+  useEffect(() => {
+    
+    const fetchMenu = async () => {
+      try {
+        const response = await fetch('http://192.168.1.7:3000/api/menu');
+        const data = await response.json();
+
+        if (response.ok) {
+          setMenuData(data);
+        } else {
+          throw new Error(data.message);
+        }
+      } catch (error) {
+        console.error('Gagal mengambil data menu:', error);
+        alert('Gagal mengambil data menu');
+      }
+    };
+
+    fetchMenu();
+  }, []);
+
+  const handleMenuOptions = (itemId) => {
+    setSelectedMenuId(itemId);
+    setMenuOptionsVisible(true);
+  };
+  
+const handleDelete = async (itemId) => {
+  try {
+    setMenuOptionsVisible(false);
+    setSelectedMenuId(null);
+
+    const response = await fetch(`http://192.168.1.7:3000/api/menu/${itemId}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      const updatedMenuData = menuData.filter((item) => item.id !== itemId);
+      setMenuData(updatedMenuData);
+    } else {
+      throw new Error('Gagal menghapus menu');
+    }
+  } catch (error) {
+    console.error('Gagal menghapus menu:', error);
+    Alert.alert('Error', 'Gagal menghapus menu');
+  }
+};
+
+
+  const handleUpdate = (itemId) => {
+    // Arahkan pengguna ke halaman pembaruan menu dengan menyediakan ID menu
+    navigation.navigate('UpdateMenu', { itemId: itemId });
+    setMenuOptionsVisible(false);
+    setSelectedMenuId(null);
+  };
+
+  const renderMenu = ({ item }) => {
+    const renderImage = `data:${item.image};base64,${item.image}`;
+    const formattedPrice = item.harga.toLocaleString('id-ID');
+
+    return (
+      <View style={styles.menuItem}>
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: renderImage }} style={styles.gambarMenu} />
+        </View>
+        <View style={styles.detailMenu}>
+          <Text style={styles.namaMenu}>{item.nama}</Text>
+          <Text style={styles.hargaMenu}>Rp. {formattedPrice}</Text>
+        </View>
+        <TouchableOpacity style={styles.menuOptionsButton} onPress={() => handleMenuOptions(item.id)}>
+          <Ionicons name="ellipsis-horizontal" size={14} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Riwayat')}
-        >
+      </View>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.buttonContainer1}>
+        <TouchableOpacity style={styles.tambahMenuContainer} onPress={() => navigation.navigate('InputMenu')}>
+          <Ionicons name="add" size={35} color="white" />
+        </TouchableOpacity>
+      </View>
+      <FlatList
+        data={menuData}
+        keyExtractor={(_item, index) => index.toString()}
+        renderItem={renderMenu}
+        numColumns={2}
+        contentContainerStyle={styles.menuList}
+      />
+      <View style={styles.buttonContainer2}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Riwayat')}>
           <View style={styles.buttonContent}>
             <Ionicons name="time-outline" size={24} color="white" />
             <Text style={styles.buttonText}>Riwayat</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('BerandaAdmin')}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('BerandaAdmin')}>
           <View style={styles.buttonContent}>
             <Ionicons name="home-outline" size={24} color="white" />
             <Text style={styles.buttonText}>Home</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('DaftarMenu')}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Promo')}>
           <View style={styles.buttonContent}>
             <Ionicons name="ios-pricetags-sharp" size={24} color="white" />
-            <Text style={styles.buttonText}>Menu</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Tampilan')}
-        >
-          <View style={styles.buttonContent}>
-            <MaterialIcons name="account-box" size={24} color="white" />
-            <Text style={styles.buttonText}>Akun</Text>
+            <Text style={styles.buttonText}>Promo</Text>
           </View>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+      <Modal visible={isMenuOptionsVisible} transparent>
+        <TouchableWithoutFeedback onPress={() => setMenuOptionsVisible(false)}>
+          <View style={styles.modalOverlay} />
+        </TouchableWithoutFeedback>
+        <View style={styles.menuOptionsContainer}>
+          <TouchableOpacity style={styles.menuOptionButton} onPress={() => handleDelete(selectedMenuId)}>
+            <Text style={styles.menuOptionText}>Delete</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuOptionButton} onPress={() => handleUpdate(selectedMenuId)}>
+            <Text style={styles.menuOptionText}>Update</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    width: '100%',
-    height: '100%',
+    backgroundColor: '#eef0ef',
     paddingTop: Constants.statusBarHeight,
   },
-  contentContainer: {
+  menuList: {
+    paddingVertical: 5,
+    paddingHorizontal: 7.5,
+    alignContent: 'center',
+    alignItems: 'flex-start',
+  },
+  menuItem: {
+    flexDirection: 'column',
+    marginBottom: 5,
+    marginRight: 5,
+    width: 165,
+    borderWidth: 0.1,
+    backgroundColor: 'white',
+    borderColor: '#eef0ef',
+  },
+  imageContainer: {
+    width: '100%',
+    height: 200,
+    overflow: 'hidden',
     alignItems: 'center',
-    paddingVertical: 0,
+    justifyContent: 'center',
   },
-  titleContainer: {
-    textAlign: 'center',
+  gambarMenu: {
+    width: '100%',
+    height: '100%',
+  },
+  detailMenu: {
+    alignItems: 'flex-start',
+    marginTop: 1,
+  },
+  namaMenu: {
     fontSize: 15,
-    fontWeight: 'bold',
-    color: '#3C3D64',
-    marginBottom: 10,
-    borderRadius: 10,
-    borderColor: 'white',
-    margin: 10,
+    marginBottom: 5,
   },
-  paragrafContainer: {
-    fontSize: 12,
-    color: '#3C3D64',
-    marginBottom: 10,
-    textAlign: 'justify',
+  hargaMenu: {
+    fontSize: 15,
+    color: 'red',
+    alignItems: 'flex-start',
   },
   buttonContainer1: {
     alignItems: 'center',
-    //flexDirection: 'row',
     width: '100%',
     height: 75,
     backgroundColor: '#4c1518',
+    zIndex: 1,
   },
   buttonContainer2: {
     flexDirection: 'row',
@@ -106,7 +196,6 @@ const styles = StyleSheet.create({
     height: 75,
     backgroundColor: '#4c1518',
     justifyContent: 'space-between',
-
   },
   button: {
     flex: 1,
@@ -123,25 +212,57 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginTop: 5, // Jarak antara ikon dan teks
+    marginTop: 5,
   },
-  MenuBeranda: {
-    height: 300,
-    width: '100%',
-    marginBottom: 0,
+  tambahMenuContainer: {
+    right: -120,
+    bottom: -580,
+    backgroundColor: '#3AFA36',
+    borderRadius: 24,
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
   },
-  input: {
-    borderWidth: 1,
-    width: '75%',
-    //weight: 50,
-    borderColor: 'grey',
-    borderRadius: 8,
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     padding: 5,
-    marginTop: 18,
-    backgroundColor: 'white',
-    borderColor: 'black',
-    fontSize: 15,
-    //fontWeight: 'bold',
   },
-
+  hapusMenu: {
+    backgroundColor: 'red',
+    padding: 5,
+    borderRadius: 4,
+  },
+  updateMenu: {
+    backgroundColor: 'green',
+    padding: 5,
+    borderRadius: 4,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  menuOptionsContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  menuOptionButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginHorizontal: 5,
+    borderRadius: 4,
+    backgroundColor: '#eef0ef',
+  },
+  menuOptionText: {
+    fontSize: 12,
+    color: 'black',
+  },
 });
+
+export default BerandaAdmin;

@@ -20,16 +20,18 @@ export default function BerandaPengguna({ navigation }) {
         <Image style={styles.MenuBeranda} source={require('../assets/PancakeBluberry.jpg')} />
         <Image style={styles.MenuBeranda} source={require('../assets/Sandwitch.jpg')} />
         <Text style={styles.titleContainer}>QA BAKERY</Text>
-        <Text style={styles.paragrafContainer}>QA Bakery su</Text>
-        <Text style={styles.titleContainer}>Title Kedua</Text>
-        <Text style={styles.paragrafContainer}>Paragraf kedua</Text>
+        <Text style={styles.paragrafContainer}>Selamat datang di QA Bakery!
+          Di Dunia Bakery, kami memperkenalkan kepada Anda usaha toko bakery kami yang berdedikasi untuk menyajikan kualitas terbaik dalam roti dan produk roti lainnya. Dengan tampilan teks yang menarik, kami mengajak Anda untuk menjelajahi dan merasakan kelezatan yang kami tawarkan.</Text>
+        <Text style={styles.paragrafContainer}>Kami adalah sebuah toko bakery yang berkomitmen untuk menghadirkan pengalaman roti yang tak tertandingi. Dari roti segar yang dipanggang dengan hati-hati hingga kue-kue manis yang menggoda, setiap produk kami dibuat dengan bahan-bahan berkualitas tinggi dan keahlian tangan yang terampil.
+
+</Text>
         <Text style={styles.titleContainer}>Title Ketiga</Text>
         <Text style={styles.paragrafContainer}>Paragraf ketiga</Text>
       </ScrollView>
       <View style={styles.buttonContainer2}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('MenuList')}
+          onPress={() => navigation.navigate('DaftarMenuUser')}
         >
           <View style={styles.buttonContent}>
             <Ionicons name="cart-outline" size={24} color="white" />

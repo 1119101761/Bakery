@@ -7,7 +7,8 @@ import Login from './components/Login';
 import Registrasi from './components/Registrasi';
 import BerandaAdmin from './components/BerandaAdmin';
 import BerandaPengguna from './components/BerandaPengguna';
-import DaftarMenu from './components/DaftarMenu';
+import DaftarMenuUser from './components/DaftarMenuUser';
+//import DaftarMenuAdmin from './components/DaftarMenuAdmin';
 import InputMenu from './components/InputMenu';
 //import Promo from './components/Promo';
 
@@ -24,8 +25,10 @@ export default function App() {
         <Stack.Screen name="Registrasi" component={Registrasi} options={{ headerShown: false }} />
         <Stack.Screen name="BerandaPengguna" component={BerandaPengguna} options={{ headerShown: false }} />
         <Stack.Screen name="BerandaAdmin" component={BerandaAdmin} options={{ headerShown: false }} />
-        <Stack.Screen name="DaftarMenu" component={DaftarMenu} options={{ headerShown: false }} />
+        <Stack.Screen name="DaftarMenuUser" component={DaftarMenuUser} options={{ headerShown: false }} />
         <Stack.Screen name="InputMenu" component={InputMenu} options={{ headerShown: false }} />
+
+
       </Stack.Navigator>
     </NavigationContainer>
   );

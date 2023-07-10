@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Image, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
 
 const InputMenu = () => {
   const [nama, setNama] = useState('');
@@ -91,7 +92,10 @@ const InputMenu = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    backgroundColor: 'white',
+    height: '100%',
+    width: '100%',
+    paddingTop: Constants.statusBarHeight,
   },
   input: {
     marginBottom: 16,

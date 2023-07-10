@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+
 const LoginPage = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
