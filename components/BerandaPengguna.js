@@ -22,11 +22,9 @@ export default function BerandaPengguna({ navigation }) {
         <Text style={styles.titleContainer}>QA BAKERY</Text>
         <Text style={styles.paragrafContainer}>Selamat datang di QA Bakery!
           Di Dunia Bakery, kami memperkenalkan kepada Anda usaha toko bakery kami yang berdedikasi untuk menyajikan kualitas terbaik dalam roti dan produk roti lainnya. Dengan tampilan teks yang menarik, kami mengajak Anda untuk menjelajahi dan merasakan kelezatan yang kami tawarkan.</Text>
-        <Text style={styles.paragrafContainer}>Kami adalah sebuah toko bakery yang berkomitmen untuk menghadirkan pengalaman roti yang tak tertandingi. Dari roti segar yang dipanggang dengan hati-hati hingga kue-kue manis yang menggoda, setiap produk kami dibuat dengan bahan-bahan berkualitas tinggi dan keahlian tangan yang terampil.
-
-</Text>
-        <Text style={styles.titleContainer}>Title Ketiga</Text>
-        <Text style={styles.paragrafContainer}>Paragraf ketiga</Text>
+        <Text style={styles.paragrafContainer}>Kami adalah sebuah toko bakery yang berkomitmen untuk menghadirkan pengalaman roti yang tak tertandingi. Dari roti segar yang dipanggang dengan hati-hati hingga kue-kue manis yang menggoda, setiap produk kami dibuat dengan bahan-bahan berkualitas tinggi dan keahlian tangan yang terampil
+        </Text> 
+        <Text style={styles.paragrafContainer}>Kami percaya bahwa teknologi dapat menjadi alat yang kuat dalam mencapai tujuan tersebut. Dengan Aplikasi Toko Roti Sederhana, kami memadukan keahlian dalam pengembangan perangkat lunak dan pengetahuan tentang industri roti untuk menciptakan sebuah platform yang menghubungkan pemilik toko roti dengan pelanggan mereka dengan cara yang efisien dan efektif.</Text>
       </ScrollView>
       <View style={styles.buttonContainer2}>
         <TouchableOpacity
@@ -102,9 +100,11 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   paragrafContainer: {
-    fontSize: 12,
+    fontSize: 13,
+    fontWeight: 'bold',
     color: '#3C3D64',
     marginBottom: 10,
+    marginHorizontal: 30,
     textAlign: 'justify',
   },
   buttonContainer1: {

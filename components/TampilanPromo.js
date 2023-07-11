@@ -99,7 +99,7 @@ const TampilanPromo = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Promo')}
+          onPress={() => navigation.navigate('TampilanPromo')}
         >
           <View style={styles.buttonContent}>
             <Ionicons name="ios-pricetags-sharp" size={24} color="white" />
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     paddingTop: Constants.statusBarHeight,
+    width: '100%',
   },
   input: {
     borderWidth: 1,
@@ -138,17 +139,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   promoList: {
-    paddingVertical: 5,
-    paddingHorizontal: 7.5,
+    //paddingVertical: 5,
+    //paddingHorizontal: 7.5,
     alignContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   promoItem: {
     flexDirection: 'column',
-    marginBottom: 5,
-    marginRight: 5,
-    width: 335,
-    borderWidth: 0.1,
+    width: 351,
+    //borderWidth: 0.1,
     backgroundColor: 'white',
     borderColor: '#eef0ef',
   },
