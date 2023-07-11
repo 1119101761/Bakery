@@ -1,37 +1,78 @@
-import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Image, TextInput, SafeAreaView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, FlatList, Text, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 
-export default function BerandaPengguna({ navigation }) {
+const TampilanPromo = ({ navigation }) => {
+  const [promoData, setPromoData] = useState([]);
   const statusBarHeight = Constants.statusBarHeight;
-  return (
-    <SafeAreaView style={styles.container}>
+  const [searchText, setSearchText] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
+  const handleSearch = (text) => {
+    setSearchText(text);
+
+    // Lakukan logika pencarian berdasarkan teks
+    const results = promoData.filter(item => item.nama.toLowerCase().includes(text.toLowerCase()));
+    setSearchResults(results);
+  };
+
+  useEffect(() => {
+    const fetchPromo = async () => {
+      try {
+        const response = await fetch('http://192.168.1.7:3000/api/promo');
+        const data = await response.json();
+
+        if (response.ok) {
+          setPromoData(data);
+        } else {
+          throw new Error(data.message);
+        }
+      } catch (error) {
+        console.error('Gagal mengambil data promo:', error);
+        alert('Gagal mengambil data promo');
+      }
+    };
+
+    fetchPromo();
+  }, []);
+
+  const renderPromo = ({ item }) => {
+    const renderImage = `data:${item.image};base64,${item.image}`;
+
+    return (
+      <View style={styles.promoItem}>
+        <Image source={{ uri: renderImage }} style={styles.gambarPromo} />
+      </View>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
       <View style={styles.buttonContainer1}>
         <TextInput
           style={styles.input}
           placeholder="Cari"
+          value={searchText}
+          onChangeText={text => handleSearch(text)}
         />
       </View>
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-        <Image style={styles.MenuBeranda} source={require('../assets/RotiMalamKerak.jpg')} />
-        <Image style={styles.MenuBeranda} source={require('../assets/RotiCroicant.jpg')} />
-        <Image style={styles.MenuBeranda} source={require('../assets/PancakeBluberry.jpg')} />
-        <Image style={styles.MenuBeranda} source={require('../assets/Sandwitch.jpg')} />
-        <Text style={styles.titleContainer}>QA BAKERY</Text>
-        <Text style={styles.paragrafContainer}>Selamat datang di QA Bakery!
-          Di Dunia Bakery, kami memperkenalkan kepada Anda usaha toko bakery kami yang berdedikasi untuk menyajikan kualitas terbaik dalam roti dan produk roti lainnya. Dengan tampilan teks yang menarik, kami mengajak Anda untuk menjelajahi dan merasakan kelezatan yang kami tawarkan.</Text>
-        <Text style={styles.paragrafContainer}>Kami adalah sebuah toko bakery yang berkomitmen untuk menghadirkan pengalaman roti yang tak tertandingi. Dari roti segar yang dipanggang dengan hati-hati hingga kue-kue manis yang menggoda, setiap produk kami dibuat dengan bahan-bahan berkualitas tinggi dan keahlian tangan yang terampil.
-
-</Text>
-        <Text style={styles.titleContainer}>Title Ketiga</Text>
-        <Text style={styles.paragrafContainer}>Paragraf ketiga</Text>
-      </ScrollView>
+      <View>
+        {searchResults.map(item => (
+          <Text key={item.id}>{item.nama}</Text>
+        ))}
+      </View>
+      <FlatList
+        data={promoData}
+        keyExtractor={(_item, index) => index.toString()}
+        renderItem={renderPromo}
+        //numColumns={2}
+        contentContainerStyle={styles.promoList}
+      />
       <View style={styles.buttonContainer2}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('DaftarMenuUser')}
+          onPress={() => navigation.navigate('DaftarMenu')}
         >
           <View style={styles.buttonContent}>
             <Ionicons name="cart-outline" size={24} color="white" />
@@ -58,7 +99,7 @@ export default function BerandaPengguna({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('TampilanPromo')}
+          onPress={() => navigation.navigate('Promo')}
         >
           <View style={styles.buttonContent}>
             <Ionicons name="ios-pricetags-sharp" size={24} color="white" />
@@ -75,41 +116,48 @@ export default function BerandaPengguna({ navigation }) {
           </View>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    width: '100%',
-    height: '100%',
     paddingTop: Constants.statusBarHeight,
   },
-  contentContainer: {
-    alignItems: 'center',
-    paddingVertical: 0,
-  },
-  titleContainer: {
-    textAlign: 'center',
+  input: {
+    borderWidth: 1,
+    width: '75%',
+    borderColor: 'grey',
+    borderRadius: 8,
+    padding: 5,
+    marginTop: 18,
+    backgroundColor: 'white',
+    borderColor: 'black',
     fontSize: 15,
-    fontWeight: 'bold',
-    color: '#3C3D64',
-    marginBottom: 10,
-    borderRadius: 10,
-    borderColor: 'white',
-    margin: 10,
   },
-  paragrafContainer: {
-    fontSize: 12,
-    color: '#3C3D64',
-    marginBottom: 10,
-    textAlign: 'justify',
+  promoList: {
+    paddingVertical: 5,
+    paddingHorizontal: 7.5,
+    alignContent: 'center',
+    alignItems: 'flex-start',
+  },
+  promoItem: {
+    flexDirection: 'column',
+    marginBottom: 5,
+    marginRight: 5,
+    width: 335,
+    borderWidth: 0.1,
+    backgroundColor: 'white',
+    borderColor: '#eef0ef',
+  },
+  gambarPromo: {
+    width: '100%',
+    height: 200,
   },
   buttonContainer1: {
     alignItems: 'center',
-    //flexDirection: 'row',
     width: '100%',
     height: 75,
     backgroundColor: '#4c1518',
@@ -120,7 +168,6 @@ const styles = StyleSheet.create({
     height: 75,
     backgroundColor: '#4c1518',
     justifyContent: 'space-between',
-
   },
   button: {
     flex: 1,
@@ -137,25 +184,8 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginTop: 5, // Jarak antara ikon dan teks
+    marginTop: 5,
   },
-  MenuBeranda: {
-    height: 300,
-    width: '100%',
-    marginBottom: 0,
-  },
-  input: {
-    borderWidth: 1,
-    width: '75%',
-    //weight: 50,
-    borderColor: 'grey',
-    borderRadius: 8,
-    padding: 5,
-    marginTop: 18,
-    backgroundColor: 'white',
-    borderColor: 'black',
-    fontSize: 15,
-    //fontWeight: 'bold',
-  },
-
 });
+
+export default TampilanPromo;

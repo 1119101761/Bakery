@@ -3,9 +3,8 @@ import { View, TextInput, Button, Image, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 
-const InputMenu = () => {
-  const [nama, setNama] = useState('');
-  const [harga, setHarga] = useState('');
+const InputPromo = () => {
+    
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
@@ -27,19 +26,16 @@ const InputMenu = () => {
     }
   };
 
-
-  const submitMenu = async () => {
+  const submitPromo = async () => {
     try {
       const formData = new FormData();
-      formData.append('nama', nama);
-      formData.append('harga', harga);
       formData.append('image', {
         uri: image,
         type: 'image/jpeg',
         name: 'menu_image.jpg',
       });
 
-      const response = await fetch('http://192.168.1.7:3000/api/menu', {
+      const response = await fetch('http://192.168.1.7:3000/api/promo', {
         method: 'POST',
         body: formData,
         headers: {
@@ -50,8 +46,6 @@ const InputMenu = () => {
 
       const data = await response.json();
       if (response.ok) {
-        setNama('');
-        setHarga('');
         setImage(null);
 
         alert(data.message);
@@ -59,33 +53,19 @@ const InputMenu = () => {
         throw new Error(data.message);
       }
     } catch (error) {
-      console.error('Gagal menambahkan menu:', error);
-      alert('Gagal menambahkan menu');
+      console.error('Gagal menambahkan promo:', error);
+      alert('Gagal menambahkan promo');
     }
   };
-  
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Nama Menu"
-        value={nama}
-        onChangeText={setNama}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Harga"
-        value={harga}
-        onChangeText={setHarga}
-        keyboardType="numeric"
-      />
       <Button title="Pilih Gambar" onPress={pickImage} />
       {image && <Image source={{ uri: image }} style={styles.image} />}
       <Button
-        title="Tambah Menu"
-        onPress={submitMenu}
-        disabled={!image || !nama || !harga}
+        title="Tambah Promo"
+        onPress={submitPromo}
+        disabled={!image}
       />
     </View>
   );
@@ -113,4 +93,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InputMenu;
+export default InputPromo;

@@ -10,8 +10,9 @@ import BerandaPengguna from './components/BerandaPengguna';
 import DaftarMenuUser from './components/DaftarMenuUser';
 //import DaftarMenuAdmin from './components/DaftarMenuAdmin';
 import InputMenu from './components/InputMenu';
+import InputPromo from './components/InputPromo';
+import TampilanPromo from './components/TampilanPromo';
 //import Promo from './components/Promo';
-
 //import MesinPencarian from './components/MesinPencarian';
 
 const Stack = createStackNavigator();
@@ -27,6 +28,9 @@ export default function App() {
         <Stack.Screen name="BerandaAdmin" component={BerandaAdmin} options={{ headerShown: false }} />
         <Stack.Screen name="DaftarMenuUser" component={DaftarMenuUser} options={{ headerShown: false }} />
         <Stack.Screen name="InputMenu" component={InputMenu} options={{ headerShown: false }} />
+        <Stack.Screen name="InputPromo" component={InputPromo} options={{ headerShown: false }} />
+        <Stack.Screen name="TampilanPromo" component={TampilanPromo} options={{ headerShown: false }} />
+
 
 
       </Stack.Navigator>

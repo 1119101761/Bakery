@@ -48,7 +48,7 @@ app.post('/api/login', async (req, res) => {
 
     const user = await User.findOne({ email, kataSandi });
 
-    if (user){
+    if (user) {
       res.status(200).json({ message: 'Login berhasil', userData: user });
     } else {
       res.status(401).json({ message: 'Login gagal' });
@@ -91,14 +91,19 @@ app.post('/api/menu', upload.single('image'), async (req, res) => {
 });
 
 //Menghapus Menu
-app.delete('/api/menu/:id', (req, res) => {
-  const { id } = req.params;
-  const index = menuData.findIndex((menu) => menu.id === parseInt(id));
-  if (index !== -1) {
-    menuData.splice(index, 1);
-    res.sendStatus(204);
-  } else {
-    res.sendStatus(404);
+app.delete('/api/menu/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const menu = await Menu.findByIdAndDelete(id);
+    if (!menu) {
+      return res.status(404).json({ message: 'Menu not found' });
+    }
+
+    res.status(200).json({ message: 'Menu berhasil dihapus' });
+  } catch (error) {
+    console.error('Gagal menghapus menu:', error);
+    res.status(500).json({ message: 'Gagal menghapus menu' });
   }
 });
 
@@ -131,6 +136,59 @@ app.get('/api/menu', async (_req, res) => {
     res.status(500).json({ message: 'Gagal mengambil data menu' });
   }
 });
+
+const promoSchema = new mongoose.Schema({
+  image: {
+    type: String,
+    required: true,
+  },
+});
+
+
+const Promo = mongoose.model('Promo', promoSchema, 'promo');
+
+// Endpoint untuk mendapatkan data promo
+app.get('/api/promo', async (_req, res) => {
+  try {
+    const promoData = await Promo.find();
+    res.json(promoData);
+  } catch (error) {
+    console.error('Gagal mengambil data promo:', error);
+    res.status(500).json({ message: 'Gagal mengambil data promo' });
+  }
+});
+
+// Endpoint untuk menambahkan data promo
+app.post('/api/promo', upload.single('image'), async (req, res) => {
+  try {
+    const image = req.file;
+
+    const promo = new Promo({
+      image: image.buffer.toString('base64'),
+    });
+
+    await promo.save();
+
+    res.status(200).json({ message: 'Menu berhasil ditambahkan' });
+  } catch (error) {
+    console.error('Gagal menambahkan menu:', error);
+    res.status(500).json({ message: 'Gagal menambahkan menu' });
+  }
+});
+
+// Endpoint untuk menghapus data promo
+app.delete('/api/promo/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await Promo.findByIdAndDelete(id);
+    res.status(200).json({ message: 'Promo berhasil dihapus' });
+  } catch (error) {
+    console.error('Gagal menghapus promo:', error);
+    res.status(500).json({ message: 'Gagal menghapus promo' });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server berjalan di http://localhost:${port}`);

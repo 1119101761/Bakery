@@ -38,26 +38,26 @@ const BerandaAdmin = ({ navigation }) => {
     setMenuOptionsVisible(true);
   };
   
-const handleDelete = async (itemId) => {
-  try {
-    setMenuOptionsVisible(false);
-    setSelectedMenuId(null);
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://192.168.1.7:3000/api/menu/${id}`, {
+        method: 'DELETE',
+      });
 
-    const response = await fetch(`http://192.168.1.7:3000/api/menu/${itemId}`, {
-      method: 'DELETE',
-    });
-
-    if (response.ok) {
-      const updatedMenuData = menuData.filter((item) => item.id !== itemId);
-      setMenuData(updatedMenuData);
-    } else {
-      throw new Error('Gagal menghapus menu');
+      const data = await response.json();
+      if (response.ok) {
+        // Menu berhasil dihapus, lakukan pembaruan data menu
+        const updatedMenuData = menuData.filter((item) => item.id !== id);
+        setMenuData(updatedMenuData);
+        alert(data.message);
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error('Gagal menghapus menu:', error);
+      alert('Gagal menghapus menu');
     }
-  } catch (error) {
-    console.error('Gagal menghapus menu:', error);
-    Alert.alert('Error', 'Gagal menghapus menu');
-  }
-};
+  };
 
 
   const handleUpdate = (itemId) => {
@@ -94,6 +94,14 @@ const handleDelete = async (itemId) => {
           <Ionicons name="add" size={35} color="white" />
         </TouchableOpacity>
       </View>
+      <View style={styles.menuOptionsContainer}>
+          <TouchableOpacity style={styles.menuOptionButton} onPress={() => handleDelete(selectedMenuId)}>
+            <Text style={styles.menuOptionText}>Delete</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuOptionButton} onPress={() => handleUpdate(selectedMenuId)}>
+            <Text style={styles.menuOptionText}>Update</Text>
+          </TouchableOpacity>
+        </View>
       <FlatList
         data={menuData}
         keyExtractor={(_item, index) => index.toString()}
@@ -114,7 +122,7 @@ const handleDelete = async (itemId) => {
             <Text style={styles.buttonText}>Home</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Promo')}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('InputPromo')}>
           <View style={styles.buttonContent}>
             <Ionicons name="ios-pricetags-sharp" size={24} color="white" />
             <Text style={styles.buttonText}>Promo</Text>
@@ -125,14 +133,7 @@ const handleDelete = async (itemId) => {
         <TouchableWithoutFeedback onPress={() => setMenuOptionsVisible(false)}>
           <View style={styles.modalOverlay} />
         </TouchableWithoutFeedback>
-        <View style={styles.menuOptionsContainer}>
-          <TouchableOpacity style={styles.menuOptionButton} onPress={() => handleDelete(selectedMenuId)}>
-            <Text style={styles.menuOptionText}>Delete</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuOptionButton} onPress={() => handleUpdate(selectedMenuId)}>
-            <Text style={styles.menuOptionText}>Update</Text>
-          </TouchableOpacity>
-        </View>
+
       </Modal>
     </View>
   );
