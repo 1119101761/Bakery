@@ -6,7 +6,11 @@ const multer = require('multer');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-mongoose.connect('mongodb://127.0.0.1:27017/Bakery');
+
+mongoose.connect('mongodb://127.0.0.1:27017/Bakery', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Koneksi Ke MongoDB Gagal:'));
@@ -14,13 +18,12 @@ db.once('open', function () {
   console.log('Sukses Terkoneksi Ke MongoDb');
 });
 
-// User
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   email: String,
   kataSandi: String,
 });
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', userSchema);
 
 //Registrasi
 app.post('/api/registrasi', async (req, res) => {
@@ -69,7 +72,7 @@ const Menu = mongoose.model('Menu', menuSchema);
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-//Menambahkan Menu
+// Menambahkan Menu
 app.post('/api/menu', upload.single('image'), async (req, res) => {
   try {
     const { nama, harga } = req.body;
@@ -90,47 +93,42 @@ app.post('/api/menu', upload.single('image'), async (req, res) => {
   }
 });
 
-//Menghapus Menu
+// Menghapus Menu
 app.delete('/api/menu/:id', async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-
-    const menu = await Menu.findByIdAndDelete(id);
-    if (!menu) {
-      return res.status(404).json({ message: 'Menu not found' });
+    const result = await Menu.deleteOne({ _id: id });
+    if (result.deletedCount === 1) {
+      res.status(200).json({ message: 'Menu berhasil dihapus' });
+    } else {
+      res.status(404).json({ message: 'Menu tidak ditemukan' });
     }
-
-    res.status(200).json({ message: 'Menu berhasil dihapus' });
   } catch (error) {
     console.error('Gagal menghapus menu:', error);
-    res.status(500).json({ message: 'Gagal menghapus menu' });
+    res.status(500).json({ message: 'Terjadi kesalahan saat menghapus menu' });
   }
 });
 
-//Mengambil data menu berdasarkan ID
+// Mengambil data menu berdasarkan ID
 app.get('/api/menu/:id', async (req, res) => {
+  const { id } = req.params;
   try {
-    const menu = await Menu.findById(req.params.id);
+    const menu = await Menu.findById(id);
     if (!menu) {
       return res.status(404).json({ error: 'Menu tidak ditemukan' });
     }
     res.json(menu);
   } catch (error) {
+    console.error('Terjadi kesalahan saat mengambil data menu:', error);
     res.status(500).json({ error: 'Terjadi kesalahan saat mengambil data menu' });
   }
 });
 
-
-//Menampilkan Menu
+// Menampilkan semua data menu
 app.get('/api/menu', async (_req, res) => {
   try {
     const menus = await Menu.find({});
-    const formattedMenus = menus.map((menu) => ({
-      nama: menu.nama,
-      harga: menu.harga,
-      image: menu.image,
-    }));
-    res.status(200).json(formattedMenus);
+    res.status(200).json(menus);
   } catch (error) {
     console.error('Gagal mengambil data menu:', error);
     res.status(500).json({ message: 'Gagal mengambil data menu' });
@@ -144,14 +142,13 @@ const promoSchema = new mongoose.Schema({
   },
 });
 
-
-const Promo = mongoose.model('Promo', promoSchema, 'promo');
+const Promo = mongoose.model('Promo', promoSchema);
 
 // Endpoint untuk mendapatkan data promo
 app.get('/api/promo', async (_req, res) => {
   try {
-    const promoData = await Promo.find();
-    res.json(promoData);
+    const promos = await Promo.find({});
+    res.status(200).json(promos);
   } catch (error) {
     console.error('Gagal mengambil data promo:', error);
     res.status(500).json({ message: 'Gagal mengambil data promo' });
@@ -169,26 +166,30 @@ app.post('/api/promo', upload.single('image'), async (req, res) => {
 
     await promo.save();
 
-    res.status(200).json({ message: 'Menu berhasil ditambahkan' });
+    res.status(200).json({ message: 'Promo berhasil ditambahkan' });
   } catch (error) {
-    console.error('Gagal menambahkan menu:', error);
-    res.status(500).json({ message: 'Gagal menambahkan menu' });
+    console.error('Gagal menambahkan promo:', error);
+    res.status(500).json({ message: 'Gagal menambahkan promo' });
   }
 });
 
 // Endpoint untuk menghapus data promo
 app.delete('/api/promo/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    await Promo.findByIdAndDelete(id);
-    res.status(200).json({ message: 'Promo berhasil dihapus' });
+  try {
+    const result = await Promo.deleteOne({ _id: id });
+
+    if (result.deletedCount === 1) {
+      res.status(200).json({ message: 'Promo berhasil dihapus' });
+    } else {
+      res.status(404).json({ message: 'Promo tidak ditemukan' });
+    }
   } catch (error) {
     console.error('Gagal menghapus promo:', error);
-    res.status(500).json({ message: 'Gagal menghapus promo' });
+    res.status(500).json({ message: 'Terjadi kesalahan saat menghapus promo' });
   }
 });
-
 
 app.listen(port, () => {
   console.log(`Server berjalan di http://localhost:${port}`);

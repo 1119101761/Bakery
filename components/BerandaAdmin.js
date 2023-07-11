@@ -9,11 +9,8 @@ const BerandaAdmin = ({ navigation }) => {
   const [selectedMenuId, setSelectedMenuId] = useState(null);
   const [isMenuOptionsVisible, setMenuOptionsVisible] = useState(false);
   const statusBarHeight = Constants.statusBarHeight;
-  const [displayedMenu, setDisplayedMenu] = useState([]);
-
 
   useEffect(() => {
-    
     const fetchMenu = async () => {
       try {
         const response = await fetch('http://192.168.1.7:3000/api/menu');
@@ -37,21 +34,23 @@ const BerandaAdmin = ({ navigation }) => {
     setSelectedMenuId(itemId);
     setMenuOptionsVisible(true);
   };
-  
-  const handleDelete = async (id) => {
+
+  const handleDeleteMenu = async (id) => {
     try {
       const response = await fetch(`http://192.168.1.7:3000/api/menu/${id}`, {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
-      const data = await response.json();
       if (response.ok) {
-        // Menu berhasil dihapus, lakukan pembaruan data menu
-        const updatedMenuData = menuData.filter((item) => item.id !== id);
+        const updatedMenuData = menuData.filter((item) => item._id !== id);
         setMenuData(updatedMenuData);
-        alert(data.message);
+        setSelectedMenuId(null);
       } else {
-        throw new Error(data.message);
+        const data = await response.json();
+        throw new Error(data.error);
       }
     } catch (error) {
       console.error('Gagal menghapus menu:', error);
@@ -59,8 +58,7 @@ const BerandaAdmin = ({ navigation }) => {
     }
   };
 
-
-  const handleUpdate = (itemId) => {
+  const handleUpdateMenu = (itemId) => {
     // Arahkan pengguna ke halaman pembaruan menu dengan menyediakan ID menu
     navigation.navigate('UpdateMenu', { itemId: itemId });
     setMenuOptionsVisible(false);
@@ -80,9 +78,20 @@ const BerandaAdmin = ({ navigation }) => {
           <Text style={styles.namaMenu}>{item.nama}</Text>
           <Text style={styles.hargaMenu}>Rp. {formattedPrice}</Text>
         </View>
-        <TouchableOpacity style={styles.menuOptionsButton} onPress={() => handleMenuOptions(item.id)}>
-          <Ionicons name="ellipsis-horizontal" size={14} color="black" />
-        </TouchableOpacity>
+        <View style={styles.menuOptionsContainer}>
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => handleDeleteMenu(item._id)} // Pilih menu untuk dihapus
+          >
+            <Ionicons name="trash-outline" size={24} color="red" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.updateButton}
+            onPress={() => handleUpdateMenu(item._id)} // Pilih menu untuk diperbarui
+          >
+            <Ionicons name="create-outline" size={24} color="blue" />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
@@ -94,17 +103,9 @@ const BerandaAdmin = ({ navigation }) => {
           <Ionicons name="add" size={35} color="white" />
         </TouchableOpacity>
       </View>
-      <View style={styles.menuOptionsContainer}>
-          <TouchableOpacity style={styles.menuOptionButton} onPress={() => handleDelete(selectedMenuId)}>
-            <Text style={styles.menuOptionText}>Delete</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuOptionButton} onPress={() => handleUpdate(selectedMenuId)}>
-            <Text style={styles.menuOptionText}>Update</Text>
-          </TouchableOpacity>
-        </View>
       <FlatList
         data={menuData}
-        keyExtractor={(_item, index) => index.toString()}
+        keyExtractor={(item) => item._id}
         renderItem={renderMenu}
         numColumns={2}
         contentContainerStyle={styles.menuList}
@@ -122,7 +123,7 @@ const BerandaAdmin = ({ navigation }) => {
             <Text style={styles.buttonText}>Home</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('InputPromo')}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Promo')}>
           <View style={styles.buttonContent}>
             <Ionicons name="ios-pricetags-sharp" size={24} color="white" />
             <Text style={styles.buttonText}>Promo</Text>
@@ -133,7 +134,6 @@ const BerandaAdmin = ({ navigation }) => {
         <TouchableWithoutFeedback onPress={() => setMenuOptionsVisible(false)}>
           <View style={styles.modalOverlay} />
         </TouchableWithoutFeedback>
-
       </Modal>
     </View>
   );
@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.1,
     backgroundColor: 'white',
     borderColor: '#eef0ef',
+    position: 'relative',
   },
   imageContainer: {
     width: '100%',
@@ -231,15 +232,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 5,
   },
-  hapusMenu: {
-    backgroundColor: 'red',
-    padding: 5,
+  deleteButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 4,
+    backgroundColor: '#eef0ef',
   },
-  updateMenu: {
-    backgroundColor: 'green',
-    padding: 5,
+  updateButton: {
+    position: 'absolute',
+    top: 0,
+    right: 30,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 4,
+    backgroundColor: '#eef0ef',
   },
   modalOverlay: {
     flex: 1,
