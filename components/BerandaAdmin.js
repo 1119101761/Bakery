@@ -123,7 +123,7 @@ const BerandaAdmin = ({ navigation }) => {
             <Text style={styles.buttonText}>Home</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Promo')}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('InputPromo')}>
           <View style={styles.buttonContent}>
             <Ionicons name="ios-pricetags-sharp" size={24} color="white" />
             <Text style={styles.buttonText}>Promo</Text>
