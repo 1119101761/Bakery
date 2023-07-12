@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 
 const TampilanPromo = ({ navigation }) => {
@@ -72,7 +72,7 @@ const TampilanPromo = ({ navigation }) => {
       <View style={styles.buttonContainer2}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('DaftarMenu')}
+          onPress={() => navigation.navigate('DaftarMenuUser')}
         >
           <View style={styles.buttonContent}>
             <Ionicons name="cart-outline" size={24} color="white" />
@@ -108,11 +108,11 @@ const TampilanPromo = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Tampilan')}
+          onPress={() => navigation.navigate('TampilanAwal')}
         >
           <View style={styles.buttonContent}>
-            <MaterialIcons name="account-box" size={24} color="white" />
-            <Text style={styles.buttonText}>Akun</Text>
+          <Entypo name="log-out" size={24} color="white" />
+            <Text style={styles.buttonText}>Keluar</Text>
           </View>
         </TouchableOpacity>
       </View>

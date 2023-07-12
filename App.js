@@ -21,7 +21,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Tampilan" component={TampilanAwal} options={{ headerShown: false }} />
+        <Stack.Screen name="TampilanAwal" component={TampilanAwal} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <Stack.Screen name="Registrasi" component={Registrasi} options={{ headerShown: false }} />
         <Stack.Screen name="BerandaPengguna" component={BerandaPengguna} options={{ headerShown: false }} />

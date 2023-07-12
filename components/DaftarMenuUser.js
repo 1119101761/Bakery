@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 
 const DaftarMenuUser = ({ navigation }) => {
@@ -13,7 +13,7 @@ const DaftarMenuUser = ({ navigation }) => {
     setSearchText(text);
 
     // Lakukan logika pencarian berdasarkan teks
-    const results = data.filter(item => item.nama.toLowerCase().includes(text.toLowerCase()));
+    const results = menuData.filter(item => item.nama.toLowerCase().includes(text.toLowerCase()));
     setSearchResults(results);
   };
 
@@ -57,30 +57,30 @@ const DaftarMenuUser = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer1}>
-        <TextInput
+      <TextInput
           style={styles.input}
           placeholder="Cari"
           value={searchText}
-          onChangeText={text => setSearchText(text)}
-          onSubmitEditing={handleSearch}
+          onChangeText={text => handleSearch(text)}
         />
       </View>
       <View>
-        {searchResults.map(item => (
-          <Text key={item.id}>{item.nama}</Text>
-        ))}
+        {searchText !== '' && searchResults.length === 0 ? (
+          <Text>Menu tidak ditemukan.</Text>
+        ) : (
+          <FlatList
+            data={searchResults.length > 0 ? searchResults : menuData}
+            keyExtractor={(_item, index) => index.toString()}
+            renderItem={renderMenu}
+            numColumns={2}
+            contentContainerStyle={styles.menuList}
+          />
+        )}
       </View>
-      <FlatList
-        data={menuData}
-        keyExtractor={(_item, index) => index.toString()}
-        renderItem={renderMenu}
-        numColumns={2}
-        contentContainerStyle={styles.menuList}
-      />
       <View style={styles.buttonContainer2}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('DaftarMenu')}
+          onPress={() => navigation.navigate('DaftarMenuUser')}
         >
           <View style={styles.buttonContent}>
             <Ionicons name="cart-outline" size={24} color="white" />
@@ -107,7 +107,7 @@ const DaftarMenuUser = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Promo')}
+          onPress={() => navigation.navigate('TampilanPromo')}
         >
           <View style={styles.buttonContent}>
             <Ionicons name="ios-pricetags-sharp" size={24} color="white" />
@@ -116,11 +116,11 @@ const DaftarMenuUser = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Tampilan')}
+          onPress={() => navigation.navigate('TampilanAwal')}
         >
           <View style={styles.buttonContent}>
-            <MaterialIcons name="account-box" size={24} color="white" />
-            <Text style={styles.buttonText}>Akun</Text>
+          <Entypo name="log-out" size={24} color="white" />
+            <Text style={styles.buttonText}>Keluar</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -148,7 +148,10 @@ const styles = StyleSheet.create({
     //fontWeight: 'bold',
   },
   menuList: {
-    paddingVertical: 5,
+    //paddingVertical: 10, (Tidak berfungsi ketika fungsi search ditambahkan, harusnya hal ini tidak ada hubungannya dengan tampilan!
+    // Solusi sementara, menggunakan padding top dan bottom sebagai gantinya.
+    paddingTop: 10,
+    paddingBottom : 155,
     paddingHorizontal: 7.5,
     alignContent: 'center',
     alignItems: 'flex-start',
@@ -198,6 +201,11 @@ const styles = StyleSheet.create({
     height: 75,
     backgroundColor: '#4c1518',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    position: 'absolute',
+    bottom: 0,
   },
   button: {
     flex: 1,

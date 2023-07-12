@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Image, TextInput, SafeAreaView } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 
 export default function BerandaPengguna({ navigation }) {
@@ -65,11 +65,11 @@ export default function BerandaPengguna({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Tampilan')}
+          onPress={() => navigation.navigate('TampilanAwal')}
         >
           <View style={styles.buttonContent}>
-            <MaterialIcons name="account-box" size={24} color="white" />
-            <Text style={styles.buttonText}>Akun</Text>
+          <Entypo name="log-out" size={24} color="white" />
+            <Text style={styles.buttonText}>Keluar</Text>
           </View>
         </TouchableOpacity>
       </View>
