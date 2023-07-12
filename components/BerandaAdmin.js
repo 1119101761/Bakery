@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, Image, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
-import { Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
+import { View, FlatList, Text, Image, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback, Alert } from 'react-native';
+import { Ionicons, MaterialIcons, Entypo, Octicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
-import { Alert } from 'react-native';
 
 const BerandaAdmin = ({ navigation }) => {
   const [menuData, setMenuData] = useState([]);

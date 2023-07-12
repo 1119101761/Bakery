@@ -1,6 +1,6 @@
 import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Image, TextInput, SafeAreaView } from 'react-native';
-import { Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Image, TextInput, SafeAreaView, searchText } from 'react-native';
+import { Ionicons, MaterialIcons, Entypo, Octicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 
 export default function BerandaPengguna({ navigation }) {
@@ -9,10 +9,15 @@ export default function BerandaPengguna({ navigation }) {
     <SafeAreaView style={styles.container}>
 
       <View style={styles.buttonContainer1}>
-        <TextInput
+      <TextInput
           style={styles.input}
           placeholder="Cari"
+          value={searchText}
+          onChangeText={text => handleSearch(text)}
         />
+        <View style={styles.buttonContent}>
+          <Ionicons name="cart-outline" size={30} color="white" />
+        </View>
       </View>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Image style={styles.MenuBeranda} source={require('../assets/RotiMalamKerak.jpg')} />
@@ -23,16 +28,16 @@ export default function BerandaPengguna({ navigation }) {
         <Text style={styles.paragrafContainer}>Selamat datang di QA Bakery!
           Di Dunia Bakery, kami memperkenalkan kepada Anda usaha toko bakery kami yang berdedikasi untuk menyajikan kualitas terbaik dalam roti dan produk roti lainnya. Dengan tampilan teks yang menarik, kami mengajak Anda untuk menjelajahi dan merasakan kelezatan yang kami tawarkan.</Text>
         <Text style={styles.paragrafContainer}>Kami adalah sebuah toko bakery yang berkomitmen untuk menghadirkan pengalaman roti yang tak tertandingi. Dari roti segar yang dipanggang dengan hati-hati hingga kue-kue manis yang menggoda, setiap produk kami dibuat dengan bahan-bahan berkualitas tinggi dan keahlian tangan yang terampil
-        </Text> 
+        </Text>
         <Text style={styles.paragrafContainer}>Kami percaya bahwa teknologi dapat menjadi alat yang kuat dalam mencapai tujuan tersebut. Dengan Aplikasi Toko Roti Sederhana, kami memadukan keahlian dalam pengembangan perangkat lunak dan pengetahuan tentang industri roti untuk menciptakan sebuah platform yang menghubungkan pemilik toko roti dengan pelanggan mereka dengan cara yang efisien dan efektif.</Text>
       </ScrollView>
       <View style={styles.buttonContainer2}>
-        <TouchableOpacity
+      <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('DaftarMenuUser')}
         >
           <View style={styles.buttonContent}>
-            <Ionicons name="cart-outline" size={24} color="white" />
+          <Entypo name="shop" size={24} color="white" />
             <Text style={styles.buttonText}>Belanja</Text>
           </View>
         </TouchableOpacity>
@@ -41,7 +46,7 @@ export default function BerandaPengguna({ navigation }) {
           onPress={() => navigation.navigate('Riwayat')}
         >
           <View style={styles.buttonContent}>
-            <Ionicons name="time-outline" size={24} color="white" />
+          <Octicons name="history" size={24} color="white" />
             <Text style={styles.buttonText}>Riwayat</Text>
           </View>
         </TouchableOpacity>
@@ -50,7 +55,7 @@ export default function BerandaPengguna({ navigation }) {
           onPress={() => navigation.navigate('BerandaPengguna')}
         >
           <View style={styles.buttonContent}>
-            <Ionicons name="home-outline" size={24} color="white" />
+          <Ionicons name="md-home" size={24} color="white" />
             <Text style={styles.buttonText}>Home</Text>
           </View>
         </TouchableOpacity>
@@ -109,7 +114,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer1: {
     alignItems: 'center',
-    //flexDirection: 'row',
+    flexDirection: 'row',
     width: '100%',
     height: 75,
     backgroundColor: '#4c1518',
@@ -120,7 +125,6 @@ const styles = StyleSheet.create({
     height: 75,
     backgroundColor: '#4c1518',
     justifyContent: 'space-between',
-
   },
   button: {
     flex: 1,
@@ -145,17 +149,21 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   input: {
-    borderWidth: 1,
-    width: '75%',
-    //weight: 50,
-    borderColor: 'grey',
-    borderRadius: 8,
-    padding: 5,
-    marginTop: 18,
-    backgroundColor: 'white',
-    borderColor: 'black',
-    fontSize: 15,
-    //fontWeight: 'bold',
+      borderWidth: 0.5,
+      width: '80%',
+      //weight: 50,
+      borderColor: 'grey',
+      borderRadius: 5,
+      padding: 5,
+      marginTop: 13,
+      marginRight: 10,
+      marginLeft: 17,
+      marginVertical: 10,
+      paddingLeft: 10,
+      backgroundColor: 'white',
+      borderColor: 'black',
+      fontSize: 15,
+      //fontWeight: 'bold',
   },
 
 });

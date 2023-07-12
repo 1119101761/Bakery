@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, Entypo, Octicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 
 const DaftarMenuUser = ({ navigation }) => {
@@ -57,12 +57,15 @@ const DaftarMenuUser = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer1}>
-      <TextInput
+        <TextInput
           style={styles.input}
           placeholder="Cari"
           value={searchText}
           onChangeText={text => handleSearch(text)}
         />
+        <View style={styles.buttonContent}>
+          <Ionicons name="cart-outline" size={30} color="white" />
+        </View>
       </View>
       <View>
         {searchText !== '' && searchResults.length === 0 ? (
@@ -78,12 +81,12 @@ const DaftarMenuUser = ({ navigation }) => {
         )}
       </View>
       <View style={styles.buttonContainer2}>
-        <TouchableOpacity
+      <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('DaftarMenuUser')}
         >
           <View style={styles.buttonContent}>
-            <Ionicons name="cart-outline" size={24} color="white" />
+          <Entypo name="shop" size={24} color="white" />
             <Text style={styles.buttonText}>Belanja</Text>
           </View>
         </TouchableOpacity>
@@ -92,7 +95,7 @@ const DaftarMenuUser = ({ navigation }) => {
           onPress={() => navigation.navigate('Riwayat')}
         >
           <View style={styles.buttonContent}>
-            <Ionicons name="time-outline" size={24} color="white" />
+          <Octicons name="history" size={24} color="white" />
             <Text style={styles.buttonText}>Riwayat</Text>
           </View>
         </TouchableOpacity>
@@ -101,7 +104,7 @@ const DaftarMenuUser = ({ navigation }) => {
           onPress={() => navigation.navigate('BerandaPengguna')}
         >
           <View style={styles.buttonContent}>
-            <Ionicons name="home-outline" size={24} color="white" />
+          <Ionicons name="md-home" size={24} color="white" />
             <Text style={styles.buttonText}>Home</Text>
           </View>
         </TouchableOpacity>
@@ -135,13 +138,17 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
   },
   input: {
-    borderWidth: 1,
-    width: '75%',
+    borderWidth: 0.5,
+    width: '80%',
     //weight: 50,
     borderColor: 'grey',
-    borderRadius: 8,
+    borderRadius: 5,
     padding: 5,
-    marginTop: 18,
+    marginTop: 13,
+    marginRight: 10,
+    marginLeft: 17,
+    marginVertical: 10,
+    paddingLeft: 10,
     backgroundColor: 'white',
     borderColor: 'black',
     fontSize: 15,
@@ -151,7 +158,7 @@ const styles = StyleSheet.create({
     //paddingVertical: 10, (Tidak berfungsi ketika fungsi search ditambahkan, harusnya hal ini tidak ada hubungannya dengan tampilan!
     // Solusi sementara, menggunakan padding top dan bottom sebagai gantinya.
     paddingTop: 10,
-    paddingBottom : 155,
+    paddingBottom: 155,
     paddingHorizontal: 7.5,
     alignContent: 'center',
     alignItems: 'flex-start',
@@ -191,7 +198,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer1: {
     alignItems: 'center',
-    width: '100%',
+    flexDirection: 'row',
+    //width: '100%',
     height: 75,
     backgroundColor: '#4c1518',
   },
@@ -201,9 +209,9 @@ const styles = StyleSheet.create({
     height: 75,
     backgroundColor: '#4c1518',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    //alignItems: 'center',
+    //paddingHorizontal: 10,
+    //paddingVertical: 8,
     position: 'absolute',
     bottom: 0,
   },
