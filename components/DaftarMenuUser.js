@@ -63,9 +63,11 @@ const DaftarMenuUser = ({ navigation }) => {
           value={searchText}
           onChangeText={text => handleSearch(text)}
         />
-        <View style={styles.buttonContent}>
-          <Ionicons name="cart-outline" size={30} color="white" />
-        </View>
+        <TouchableOpacity onPress={() => navigation.navigate('KeranjangBelanja')}>
+          <View style={styles.buttonContent}>
+            <Ionicons name="cart-outline" size={30} color="white" />
+          </View>
+        </TouchableOpacity>
       </View>
       <View>
         {searchText !== '' && searchResults.length === 0 ? (
@@ -81,12 +83,12 @@ const DaftarMenuUser = ({ navigation }) => {
         )}
       </View>
       <View style={styles.buttonContainer2}>
-      <TouchableOpacity
+        <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('DaftarMenuUser')}
         >
           <View style={styles.buttonContent}>
-          <Entypo name="shop" size={24} color="white" />
+            <Entypo name="shop" size={24} color="white" />
             <Text style={styles.buttonText}>Belanja</Text>
           </View>
         </TouchableOpacity>
@@ -95,7 +97,7 @@ const DaftarMenuUser = ({ navigation }) => {
           onPress={() => navigation.navigate('Riwayat')}
         >
           <View style={styles.buttonContent}>
-          <Octicons name="history" size={24} color="white" />
+            <Octicons name="history" size={24} color="white" />
             <Text style={styles.buttonText}>Riwayat</Text>
           </View>
         </TouchableOpacity>
@@ -104,7 +106,7 @@ const DaftarMenuUser = ({ navigation }) => {
           onPress={() => navigation.navigate('BerandaPengguna')}
         >
           <View style={styles.buttonContent}>
-          <Ionicons name="md-home" size={24} color="white" />
+            <Ionicons name="md-home" size={24} color="white" />
             <Text style={styles.buttonText}>Home</Text>
           </View>
         </TouchableOpacity>
@@ -122,7 +124,7 @@ const DaftarMenuUser = ({ navigation }) => {
           onPress={() => navigation.navigate('TampilanAwal')}
         >
           <View style={styles.buttonContent}>
-          <Entypo name="log-out" size={24} color="white" />
+            <Entypo name="log-out" size={24} color="white" />
             <Text style={styles.buttonText}>Keluar</Text>
           </View>
         </TouchableOpacity>
@@ -134,7 +136,7 @@ const DaftarMenuUser = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eef0ef',
+    backgroundColor: '#e8e8e8',
     paddingTop: Constants.statusBarHeight,
   },
   input: {
@@ -171,6 +173,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.1,
     backgroundColor: 'white',
     borderColor: '#eef0ef',
+    //borderRadius: 3.5,
   },
   imageContainer: {
     width: '100%',
@@ -178,6 +181,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
+    //borderRadius: 3.5,
   },
   gambarMenu: {
     width: '100%',
@@ -186,15 +190,17 @@ const styles = StyleSheet.create({
   detailMenu: {
     alignItems: 'flex-start',
     marginTop: 1,
+    marginLeft: 4,
   },
   namaMenu: {
     fontSize: 15,
-    marginBottom: 5,
+    marginBottom: 2,
   },
   hargaMenu: {
     fontSize: 15,
     color: 'red',
-    alignItems: 'flex-start',
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
   buttonContainer1: {
     alignItems: 'center',

@@ -30,9 +30,6 @@ export default function App() {
         <Stack.Screen name="InputMenu" component={InputMenu} options={{ headerShown: false }} />
         <Stack.Screen name="InputPromo" component={InputPromo} options={{ headerShown: false }} />
         <Stack.Screen name="TampilanPromo" component={TampilanPromo} options={{ headerShown: false }} />
-
-
-
       </Stack.Navigator>
     </NavigationContainer>
   );

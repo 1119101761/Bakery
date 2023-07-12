@@ -9,15 +9,17 @@ export default function BerandaPengguna({ navigation }) {
     <SafeAreaView style={styles.container}>
 
       <View style={styles.buttonContainer1}>
-      <TextInput
+        <TextInput
           style={styles.input}
           placeholder="Cari"
           value={searchText}
           onChangeText={text => handleSearch(text)}
         />
-        <View style={styles.buttonContent}>
-          <Ionicons name="cart-outline" size={30} color="white" />
-        </View>
+        <TouchableOpacity onPress={() => navigation.navigate('KeranjangBelanja')}>
+          <View style={styles.buttonContent}>
+            <Ionicons name="cart-outline" size={30} color="white" />
+          </View>
+        </TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Image style={styles.MenuBeranda} source={require('../assets/RotiMalamKerak.jpg')} />
@@ -32,12 +34,12 @@ export default function BerandaPengguna({ navigation }) {
         <Text style={styles.paragrafContainer}>Kami percaya bahwa teknologi dapat menjadi alat yang kuat dalam mencapai tujuan tersebut. Dengan Aplikasi Toko Roti Sederhana, kami memadukan keahlian dalam pengembangan perangkat lunak dan pengetahuan tentang industri roti untuk menciptakan sebuah platform yang menghubungkan pemilik toko roti dengan pelanggan mereka dengan cara yang efisien dan efektif.</Text>
       </ScrollView>
       <View style={styles.buttonContainer2}>
-      <TouchableOpacity
+        <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('DaftarMenuUser')}
         >
           <View style={styles.buttonContent}>
-          <Entypo name="shop" size={24} color="white" />
+            <Entypo name="shop" size={24} color="white" />
             <Text style={styles.buttonText}>Belanja</Text>
           </View>
         </TouchableOpacity>
@@ -46,7 +48,7 @@ export default function BerandaPengguna({ navigation }) {
           onPress={() => navigation.navigate('Riwayat')}
         >
           <View style={styles.buttonContent}>
-          <Octicons name="history" size={24} color="white" />
+            <Octicons name="history" size={24} color="white" />
             <Text style={styles.buttonText}>Riwayat</Text>
           </View>
         </TouchableOpacity>
@@ -55,7 +57,7 @@ export default function BerandaPengguna({ navigation }) {
           onPress={() => navigation.navigate('BerandaPengguna')}
         >
           <View style={styles.buttonContent}>
-          <Ionicons name="md-home" size={24} color="white" />
+            <Ionicons name="md-home" size={24} color="white" />
             <Text style={styles.buttonText}>Home</Text>
           </View>
         </TouchableOpacity>
@@ -73,7 +75,7 @@ export default function BerandaPengguna({ navigation }) {
           onPress={() => navigation.navigate('TampilanAwal')}
         >
           <View style={styles.buttonContent}>
-          <Entypo name="log-out" size={24} color="white" />
+            <Entypo name="log-out" size={24} color="white" />
             <Text style={styles.buttonText}>Keluar</Text>
           </View>
         </TouchableOpacity>
@@ -149,21 +151,21 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   input: {
-      borderWidth: 0.5,
-      width: '80%',
-      //weight: 50,
-      borderColor: 'grey',
-      borderRadius: 5,
-      padding: 5,
-      marginTop: 13,
-      marginRight: 10,
-      marginLeft: 17,
-      marginVertical: 10,
-      paddingLeft: 10,
-      backgroundColor: 'white',
-      borderColor: 'black',
-      fontSize: 15,
-      //fontWeight: 'bold',
+    borderWidth: 0.5,
+    width: '80%',
+    //weight: 50,
+    borderColor: 'grey',
+    borderRadius: 5,
+    padding: 5,
+    marginTop: 13,
+    marginRight: 10,
+    marginLeft: 17,
+    marginVertical: 10,
+    paddingLeft: 10,
+    backgroundColor: 'white',
+    borderColor: 'black',
+    fontSize: 15,
+    //fontWeight: 'bold',
   },
 
 });

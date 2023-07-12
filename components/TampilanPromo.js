@@ -56,9 +56,11 @@ const TampilanPromo = ({ navigation }) => {
           value={searchText}
           onChangeText={text => handleSearch(text)}
         />
-        <View style={styles.buttonContent}>
-          <Ionicons name="cart-outline" size={30} color="white" />
-        </View>
+        <TouchableOpacity onPress={() => navigation.navigate('KeranjangBelanja')}>
+          <View style={styles.buttonContent}>
+            <Ionicons name="cart-outline" size={30} color="white" />
+          </View>
+        </TouchableOpacity>
       </View>
       <View>
         {searchResults.map(item => (
