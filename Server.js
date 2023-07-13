@@ -191,6 +191,47 @@ app.delete('/api/promo/:id', async (req, res) => {
   }
 });
 
+
+// Handle Order
+const orderSchema = new mongoose.Schema({
+  menuId: String,
+  quantity: Number,
+});
+
+const Order = mongoose.model('Order', orderSchema);
+
+app.post('/api/orders', async (req, res) => {
+  try {
+    const { menuId, quantity } = req.body;
+
+    console.log('Received order request:', menuId, quantity);
+    console.log(req.body);
+
+    // Validasi input
+    if (!menuId || !quantity || typeof quantity !== 'number' || quantity <= 0) {
+      console.log('Invalid order data');
+      return res.status(400).json({ error: 'Invalid order data' });
+    }
+
+    // Simpan pesanan ke dalam database
+    const order = new Order({
+      menuId,
+      quantity,
+    });
+
+    await order.save();
+
+    console.log('Order saved:', order);
+
+    res.status(201).json({ message: 'Pesanan berhasil disimpan' });
+  } catch (error) {
+    console.error('Gagal menyimpan pesanan:', error);
+    res.status(500).json({ message: 'Gagal menyimpan pesanan' });
+  }
+});
+
+
+
 app.listen(port, () => {
   console.log(`Server berjalan di http://localhost:${port}`);
 });

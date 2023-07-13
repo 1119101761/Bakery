@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 
-const Belanja = ({ route }) => {
+const Belanja = ({ route, navugation }) => {
   const { menu } = route.params;
   const [jumlahPesanan, setJumlahPesanan] = useState(1);
 

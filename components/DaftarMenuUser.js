@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, FlatList, Text, Image, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons, MaterialIcons, Entypo, Octicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 
@@ -8,6 +8,8 @@ const DaftarMenuUser = ({ navigation }) => {
   const statusBarHeight = Constants.statusBarHeight;
   const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [quantity, setQuantity] = useState(1);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -16,6 +18,45 @@ const DaftarMenuUser = ({ navigation }) => {
     const results = menuData.filter(item => item.nama.toLowerCase().includes(text.toLowerCase()));
     setSearchResults(results);
   };
+
+  const openOrderPopup = (menu) => {
+    setSelectedMenu(menu);
+    setQuantity(1);
+  };
+
+  const submitOrder = () => {
+    if (!selectedMenu || !selectedMenu._id) {
+      Alert.alert('Error', 'Silakan pilih menu sebelum melakukan pemesanan');
+      return;
+    }
+
+    const order = {
+      menuId: selectedMenu._id,
+      quantity: quantity,
+    };
+
+    fetch('http://192.168.1.7:3000/api/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(order),
+    })
+      .then((response) => {
+        if (response.ok) {
+          Alert.alert('Sukses', 'Pesanan berhasil dikirim!');
+          setSelectedMenu(null);
+          setQuantity(1);
+        } else {
+          Alert.alert('Error', 'Gagal mengirim pesanan. Silakan coba lagi.');
+        }
+      })
+      .catch((error) => {
+        console.error('Gagal mengirim pesanan:', error);
+        Alert.alert('Error', 'Gagal mengirim pesanan. Silakan coba lagi.');
+      });
+  };
+
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -49,6 +90,9 @@ const DaftarMenuUser = ({ navigation }) => {
         <View style={styles.detailMenu}>
           <Text style={styles.namaMenu}>{item.nama}</Text>
           <Text style={styles.hargaMenu}>Rp. {formattedPrice}</Text>
+          <TouchableOpacity onPress={() => openOrderPopup(item)}>
+            <Text style={styles.pesanButton}>Pesan</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -70,6 +114,25 @@ const DaftarMenuUser = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View>
+        {selectedMenu && (
+          <View style={styles.orderPopup}>
+            <Text style={styles.popupTitle}>{selectedMenu.nama}</Text>
+            <Text style={styles.popupPrice}>Harga: Rp. {selectedMenu.harga}</Text>
+            <Text>Jumlah pesanan:</Text>
+            <TextInput
+              style={styles.quantityInput}
+              keyboardType="numeric"
+              value={quantity.toString()}
+              onChangeText={(text) => setQuantity(parseInt(text))}
+            />
+            <TouchableOpacity style={styles.orderButton} onPress={submitOrder}>
+              <Text style={styles.orderButtonText}>Pesan</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.closeButton} onPress={() => setSelectedMenu(null)}>
+              <Ionicons name="close-circle" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+        )}
         {searchText !== '' && searchResults.length === 0 ? (
           <Text>Menu tidak ditemukan.</Text>
         ) : (
@@ -132,6 +195,7 @@ const DaftarMenuUser = ({ navigation }) => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
